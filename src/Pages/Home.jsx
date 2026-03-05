@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import LightPillar from "../components/ui/LightPillar";
 
 const services = [
@@ -122,9 +123,56 @@ const fadeIn = (delay = 0) => ({
 });
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let timeoutId;
+    const finishLoading = () => {
+      // Small delay keeps the transition smooth even on fast connections.
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => setIsLoading(false), 320);
+    };
+
+    if (document.readyState === "complete") {
+      finishLoading();
+    } else {
+      window.addEventListener("load", finishLoading);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      window.removeEventListener("load", finishLoading);
+    };
+  }, []);
+
   return (
-    <div className="bg-white dark:bg-black text-slate-900 dark:text-white">
-      <section className="relative overflow-hidden min-h-screen">
+    <>
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-slate-950 text-white"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.35 } }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-slate-950 opacity-70" />
+            <motion.div
+              className="relative flex flex-col items-center gap-4 px-6"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 0.08 } }}
+              exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}
+            >
+              <div className="w-12 h-12 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+              <p className="text-xs tracking-[0.22em] uppercase text-white/80">
+                Loading experience
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="bg-white dark:bg-black text-slate-900 dark:text-white">
+        <section className="relative overflow-hidden min-h-screen">
         <div className="absolute inset-0">
           <LightPillar
             topColor="#a855f7"
@@ -387,6 +435,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }
