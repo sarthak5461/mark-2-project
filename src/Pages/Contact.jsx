@@ -21,7 +21,7 @@ export default function Contact() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/contact", {
+      const response = await fetch("/.netlify/functions/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +68,11 @@ export default function Contact() {
         <form
           onSubmit={handleSubmit}
           className="mt-8 grid md:grid-cols-2 gap-4"
+          name="contact"
+          method="POST"
+          data-netlify="true"
         >
+          <input type="hidden" name="form-name" value="contact" />
           <input
             name="name"
             value={formData.name}
