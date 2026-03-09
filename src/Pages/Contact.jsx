@@ -8,6 +8,7 @@ export default function Contact() {
     website: "",
     focus: "",
     message: "",
+    "bot-field": "",
   });
 
   const handleChange = (e) => {
@@ -17,21 +18,31 @@ export default function Contact() {
     });
   };
 
+  const encode = (data) =>
+    Object.keys(data)
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+      .join("&");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("/.netlify/functions/contact", {
+      const response = await fetch("/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify(formData),
+        body: encode({
+          "form-name": "contact",
+          ...formData,
+        }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error("Form submission failed");
+      }
 
-      alert(data.message);
+      alert("Thanks! We'll be in touch soon.");
 
       setFormData({
         name: "",
@@ -40,6 +51,7 @@ export default function Contact() {
         website: "",
         focus: "",
         message: "",
+        "bot-field": "",
       });
     } catch (error) {
       console.error(error);
@@ -66,13 +78,19 @@ export default function Contact() {
         </div>
 
         <form
-          onSubmit={handleSubmit}
-          className="mt-8 grid md:grid-cols-2 gap-4"
-          name="contact"
-          method="POST"
-          data-netlify="true"
-        >
-          <input type="hidden" name="form-name" value="contact" />
+        onSubmit={handleSubmit}
+        className="mt-8 grid md:grid-cols-2 gap-4"
+        name="contact"
+        method="POST"
+        data-netlify="true"
+        data-netlify-honeypot="bot-field"
+      >
+        <input type="hidden" name="form-name" value="contact" />
+        <p className="hidden">
+          <label>
+            Don’t fill this out: <input name="bot-field" onChange={handleChange} />
+          </label>
+        </p>
           <input
             name="name"
             value={formData.name}

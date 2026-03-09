@@ -1,9 +1,19 @@
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   try {
-    const data = JSON.parse(event.body);
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.error("Missing EMAIL_USER or EMAIL_PASS in environment");
+      return {
+        statusCode: 500,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: "Email service not configured",
+        }),
+      };
+    }
 
+    const data = JSON.parse(event.body || "{}");
     const { name, email, company, website, focus, message } = data;
 
     const transporter = nodemailer.createTransport({
@@ -18,7 +28,7 @@ exports.handler = async (event) => {
       from: `"Website Lead" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       replyTo: email,
-      subject: "🚀 New Contact Request",
+      subject: "New Contact Request",
       html: `
         <h2>New Website Lead</h2>
         <p><strong>Name:</strong> ${name}</p>
@@ -33,11 +43,14 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: "Email sent successfully" }),
     };
   } catch (error) {
+    console.error(error);
     return {
       statusCode: 500,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: "Email failed", error: error.message }),
     };
   }

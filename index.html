@@ -6,14 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>mark-2</title>
   </head>
-  <form name="contact" netlify hidden>
-    <input type="text" name="name" />
-    <input type="email" name="email" />
-    <input type="text" name="company" />
-    <input type="text" name="website" />
-    <textarea name="message"></textarea>
-  </form>
   <body>
+    <!-- Hidden form to let Netlify detect the submission schema at build time -->
+    <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="company" />
+      <input type="text" name="website" />
+      <input type="text" name="focus" />
+      <textarea name="message"></textarea>
+      <input type="text" name="bot-field" />
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
