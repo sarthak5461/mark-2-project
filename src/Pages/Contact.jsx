@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -8,41 +9,31 @@ export default function Contact() {
     website: "",
     focus: "",
     message: "",
-    "bot-field": "",
   });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const [loading, setLoading] = useState(false);
 
-  const encode = (data) =>
-    Object.keys(data)
-      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-      .join("&");
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
-      const response = await fetch("/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: encode({
-          "form-name": "contact",
-          ...formData,
-        }),
-      });
+      await emailjs.send(
+        "service_okf2cjm",
+        "template_1fagq9a",
+        formData,
+        "F9xylwoxsooxR1xt_",
+      );
 
-      if (!response.ok) {
-        throw new Error("Form submission failed");
-      }
-
-      alert("Thanks! We'll be in touch soon.");
+      alert("Message sent successfully!");
 
       setFormData({
         name: "",
@@ -51,12 +42,13 @@ export default function Contact() {
         website: "",
         focus: "",
         message: "",
-        "bot-field": "",
       });
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+      alert("Failed to send message");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -78,26 +70,16 @@ export default function Contact() {
         </div>
 
         <form
-        onSubmit={handleSubmit}
-        className="mt-8 grid md:grid-cols-2 gap-4"
-        name="contact"
-        method="POST"
-        data-netlify="true"
-        data-netlify-honeypot="bot-field"
-      >
-        <input type="hidden" name="form-name" value="contact" />
-        <p className="hidden">
-          <label>
-            Don’t fill this out: <input name="bot-field" onChange={handleChange} />
-          </label>
-        </p>
+          onSubmit={handleSubmit}
+          className="mt-8 grid md:grid-cols-2 gap-4"
+        >
           <input
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
             placeholder="Full name"
             required
+            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
           />
 
           <input
@@ -105,25 +87,25 @@ export default function Contact() {
             type="email"
             value={formData.email}
             onChange={handleChange}
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
             placeholder="Work email"
             required
+            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
           />
 
           <input
             name="company"
             value={formData.company}
             onChange={handleChange}
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
             placeholder="Company"
+            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
           />
 
           <input
             name="website"
             value={formData.website}
             onChange={handleChange}
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
             placeholder="Website"
+            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
           />
 
           <select
@@ -147,15 +129,16 @@ export default function Contact() {
             rows="4"
             value={formData.message}
             onChange={handleChange}
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm md:col-span-2"
             placeholder="What are your goals for the next 90 days?"
+            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm md:col-span-2"
           />
 
           <button
             type="submit"
-            className="md:col-span-2 px-6 py-3 rounded-full bg-accent text-white font-semibold shadow-md shadow-indigo-500/25"
+            disabled={loading}
+            className="md:col-span-2 px-6 py-3 rounded-full bg-accent text-white font-semibold shadow-md shadow-indigo-500/25 disabled:opacity-60"
           >
-            Send request
+            {loading ? "Sending..." : "Send request"}
           </button>
         </form>
       </div>
