@@ -1,5 +1,6 @@
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
+import PageHero from "../components/PageHero";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -52,95 +53,100 @@ export default function Contact() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-24">
-      <div className="rounded-[32px] border border-gray-200 dark:border-gray-800 bg-gradient-to-br from-indigo-500/10 via-accent/15 to-fuchsia-400/10 p-8 lg:p-12">
-        <div className="max-w-2xl">
-          <p className="text-sm uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
-            Start a project
-          </p>
+    <div className="space-y-10 pb-24">
+      <div className="max-w-7xl mx-auto px-6 pt-10">
+        <PageHero
+          eyebrow="Contact"
+          title="Tell us about the growth chapter you want to ship."
+          subtitle="Pick your focus area and we’ll start with a two-week pilot that proves impact fast."
+          gradient="from-indigo-600/80 via-purple-600/70 to-blue-500/70"
+        />
+      </div>
 
-          <h1 className="text-4xl font-semibold mt-2">
-            Tell us about the growth chapter you want to ship.
-          </h1>
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="rounded-[32px] border border-gray-200 dark:border-gray-800 bg-gradient-to-br from-indigo-500/10 via-accent/15 to-fuchsia-400/10 p-8 lg:p-12">
+          <div className="max-w-2xl">
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
+              Start a project
+            </p>
 
-          <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
-            We focus on SEO, performance, social, affiliate, brand, influencer,
-            and content marketing.
-          </p>
+            <h2 className="text-3xl font-semibold mt-2">Share a few details and we’ll reply within one business day.</h2>
+
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
+              We focus on SEO, performance, social, affiliate, brand, influencer, and content marketing.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-8 grid md:grid-cols-2 gap-4">
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Full name"
+              required
+              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
+            />
+
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Work email"
+              required
+              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
+            />
+
+            <input
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              placeholder="Company"
+              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
+            />
+
+            <input
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              placeholder="Website"
+              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
+            />
+
+            <select
+              name="focus"
+              value={formData.focus}
+              onChange={handleChange}
+              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm md:col-span-2"
+            >
+              <option value="">Focus area</option>
+              <option>Search Engine Optimization</option>
+              <option>Performance Marketing</option>
+              <option>Social Media Marketing</option>
+              <option>Affiliate Marketing</option>
+              <option>Brand Marketing</option>
+              <option>Influencer Marketing</option>
+              <option>Content Marketing</option>
+            </select>
+
+            <textarea
+              name="message"
+              rows="4"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="What are your goals for the next 90 days?"
+              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm md:col-span-2"
+            />
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="md:col-span-2 px-6 py-3 rounded-full bg-accent text-white font-semibold shadow-md shadow-indigo-500/25 disabled:opacity-60"
+            >
+              {loading ? "Sending..." : "Send request"}
+            </button>
+          </form>
         </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="mt-8 grid md:grid-cols-2 gap-4"
-        >
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Full name"
-            required
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
-          />
-
-          <input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Work email"
-            required
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
-          />
-
-          <input
-            name="company"
-            value={formData.company}
-            onChange={handleChange}
-            placeholder="Company"
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
-          />
-
-          <input
-            name="website"
-            value={formData.website}
-            onChange={handleChange}
-            placeholder="Website"
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm"
-          />
-
-          <select
-            name="focus"
-            value={formData.focus}
-            onChange={handleChange}
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm md:col-span-2"
-          >
-            <option value="">Focus area</option>
-            <option>Search Engine Optimization</option>
-            <option>Performance Marketing</option>
-            <option>Social Media Marketing</option>
-            <option>Affiliate Marketing</option>
-            <option>Brand Marketing</option>
-            <option>Influencer Marketing</option>
-            <option>Content Marketing</option>
-          </select>
-
-          <textarea
-            name="message"
-            rows="4"
-            value={formData.message}
-            onChange={handleChange}
-            placeholder="What are your goals for the next 90 days?"
-            className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-slate-950/70 px-4 py-3 text-sm md:col-span-2"
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="md:col-span-2 px-6 py-3 rounded-full bg-accent text-white font-semibold shadow-md shadow-indigo-500/25 disabled:opacity-60"
-          >
-            {loading ? "Sending..." : "Send request"}
-          </button>
-        </form>
       </div>
     </div>
   );

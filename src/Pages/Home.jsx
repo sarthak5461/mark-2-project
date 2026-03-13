@@ -105,15 +105,6 @@ const testimonials = [
   },
 ];
 
-const focusAreas = [
-  "Search Engine Optimization",
-  "Performance Marketing",
-  "Social Media Marketing",
-  "Affiliate Marketing",
-  "Brand Marketing",
-  "Influencer Marketing",
-  "Content Marketing",
-];
 
 const fadeIn = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
@@ -172,7 +163,7 @@ export default function Home() {
       </AnimatePresence>
 
       <div className="bg-white dark:bg-black text-slate-900 dark:text-white">
-        <section className="relative overflow-hidden min-h-screen">
+        <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <LightPillar
             topColor="#a855f7"
@@ -223,16 +214,6 @@ export default function Home() {
                 >
                   View playbook
                 </motion.button>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-2">
-                {focusAreas.map((area) => (
-                  <span
-                    key={area}
-                    className="px-3 py-1.5 rounded-full text-xs text-white/90 border border-white/15 bg-white/5 backdrop-blur"
-                  >
-                    {area}
-                  </span>
-                ))}
               </div>
             </motion.div>
           </div>
